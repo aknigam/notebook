@@ -1,11 +1,11 @@
 package controllers
 
 import (
+	"encoding/json"
+	"net/http"
 	"notebook/common"
 	"notebook/models"
 	"notebook/repository"
-	"encoding/json"
-	"net/http"
 )
 
 type NoteController struct {
@@ -14,7 +14,29 @@ type NoteController struct {
 
 var Note NoteController
 
-func (controller *NoteController) AddNote(w http.ResponseWriter, r *http.Request) {
+func (controller *NoteController) UpsertNote(w http.ResponseWriter, r *http.Request) {
+
+	len := r.ContentLength
+	body := make([]byte, len)
+	r.Body.Read(body)
+
+	var note models.Note
+	json.Unmarshal(body, &note)
+
+	err := controller.repo.UpsertNote(&note)
+	if err != nil {
+		common.Error.Println("Note could not be created", err)
+		return
+	}
+
+	common.Info.Println("Call successful", &note)
+
+	w.WriteHeader(http.StatusOK)
+	// location header should also be set as per the REST standards
+	return
+}
+
+func (controller *NoteController) AppendNote(w http.ResponseWriter, r *http.Request) {
 
 	len := r.ContentLength
 	body := make([]byte, len)
@@ -23,13 +45,13 @@ func (controller *NoteController) AddNote(w http.ResponseWriter, r *http.Request
 	var noteSnippet models.NoteSnippet
 	json.Unmarshal(body, &noteSnippet)
 
-	err := controller.repo.AddNote(&noteSnippet)
+	err := controller.repo.AppendNote(&noteSnippet)
 	if err != nil {
-		common.Error.Println("Order could not be created", err)
+		common.Error.Println("Note could not be created", err)
 		return
 	}
 
-	common.Info.Println("Call successfull", body)
+	common.Info.Println("Call successful", &noteSnippet)
 
 	w.WriteHeader(http.StatusOK)
 	// location header should also be set as per the REST standards

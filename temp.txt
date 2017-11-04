@@ -33,3 +33,12 @@ This is testing
 
 Anand Nigam
 This is testing in the new project
+
+http://blog.jamesdbloom.com/JVMInternals.html
+This article explains the internal architecture of the Java Virtual Machine (JVM). The following diagram show the key internal components of a typical JVM that conforms to The Java Virtual Machine Specification Java SE 7 Edition.
+
+http://blog.jamesdbloom.com/JVMInternals.html
+The components shown on this diagram are each explained below in two sections. First section covers the components that are created for each thread and the second section covers the components that are created independently of threads. Threads JVM System Threads Per Thread program Counter (PC) Stack Native Stack Stack Restrictions
+
+http://blog.jamesdbloom.com/JVMInternals.html
+A thread is a thread of execution in a program. The JVM allows an application to have multiple threads of execution running concurrently. In the Hotspot JVM there is a direct mapping between a Java Thread and a native operating system Thread. After preparing all of the state for a Java thread such as thread-local storage, allocation buffers, synchronization objects, stacks and the program counter, the native thread is created. The native thread is reclaimed once the Java thread terminates. The operating system is therefore responsible for scheduling all threads and dispatching them to any available CPU. Once the native thread has initialized it invokes the run() method in the Java thread. When the run() method returns, uncaught exceptions are handled, then the native thread confirms if the JVM needs to be terminated as a result of the thread terminating (i.e. is it the last non-deamon thread). When the thread terminates all resources for both the native and Java thread are released.

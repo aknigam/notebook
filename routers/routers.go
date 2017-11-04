@@ -1,16 +1,16 @@
 package routers
 
 import (
-	"notebook/common"
-	"notebook/controllers"
 	"github.com/gorilla/mux"
 	"net/http"
+	"notebook/common"
+	"notebook/controllers"
 )
 
 func SetRoutes(r *mux.Router) {
 
-
-	r.HandleFunc("/notes/save", controllers.Note.AddNote).Methods("POST")
+	r.HandleFunc("/notes/append", controllers.Note.AppendNote).Methods("POST")
+	r.HandleFunc("/notes/add", controllers.Note.UpsertNote).Methods("POST")
 
 }
 
